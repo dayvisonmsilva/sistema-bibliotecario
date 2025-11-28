@@ -1,7 +1,7 @@
 import json
 from django.http import JsonResponse
 from .models import Usuario, Livro
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 
 @csrf_exempt
@@ -42,6 +42,14 @@ def realizar_login(request):
             })
         else:
             return JsonResponse({'erro': 'Credenciais inválidas!'}, status=401)
+    else:
+        return JsonResponse({'erro': 'Método não permitido!'}, status=405)
+
+@csrf_exempt
+def realizar_logout(request):
+    if request.method == 'POST':
+        logout(request)
+        return JsonResponse({'mensagem': 'Sessão encerrada!'})
     else:
         return JsonResponse({'erro': 'Método não permitido!'}, status=405)
 
