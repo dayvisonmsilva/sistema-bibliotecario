@@ -29,3 +29,22 @@ class Usuario(AbstractUser):
 
     class Meta:
         verbose_name = 'Usuário'
+
+class Livro(models.Model):
+    titulo = models.CharField(max_length=200)
+    autor = models.CharField(max_length=200)
+    ano = models.IntegerField()
+    editora = models.CharField(max_length=200)
+    numero_paginas = models.IntegerField()
+    quantidade_total = models.IntegerField(default=0)
+    quantidade_disponivel = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.titulo} - {self.autor}"
+
+class Exemplar(models.Model):
+    codigo_barras = models.CharField(max_length=50, unique=True)
+    livro = models.ForeignKey(Livro, on_delete=models.CASCADE, related_name='exemplares')
+
+    def __str__(self):
+        return f"{self.livro.titulo} - {self.codigo_barras}"
