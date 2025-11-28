@@ -22,7 +22,7 @@ def realizar_cadastro(request):
         except Exception as e:
             return JsonResponse({'erro': str(e)}, status=400)
     else:
-        return JsonResponse({'erro': 'Método não permitido'}, status=405)
+        return JsonResponse({'erro': 'Método não permitido!'}, status=405)
 
 @csrf_exempt
 def realizar_login(request):
@@ -41,9 +41,9 @@ def realizar_login(request):
                 'tipo': user.tipo_usuario
             })
         else:
-            return JsonResponse({'erro': 'Credenciais inválidas'}, status=401)
+            return JsonResponse({'erro': 'Credenciais inválidas!'}, status=401)
     else:
-        return JsonResponse({'erro': 'Método não permitido'}, status=405)
+        return JsonResponse({'erro': 'Método não permitido!'}, status=405)
 
 @csrf_exempt
 def listar_livros(request):
@@ -64,20 +64,20 @@ def listar_livros(request):
             })
         return JsonResponse(dados, safe=False)
     else:
-        return JsonResponse({'erro': 'Método não permitido'}, status=405)
+        return JsonResponse({'erro': 'Método não permitido!'}, status=405)
 
 @csrf_exempt
 def cadastrar_livro(request):
+    usuario = request.user
+
+    if not usuario.is_authenticated:
+        return JsonResponse({'erro': 'Você precisa fazer login para realizar esta ação.'}, status=401)
+
+    if usuario.tipo_usuario != 'BIBLIOTECARIO':
+        return JsonResponse({'erro': 'Acesso negado. Apenas bibliotecários podem cadastrar livros.'}, status=403)
+
     if request.method == 'POST':
         dados = json.loads(request.body)
-        id_usuario = dados.get('id_usuario')
-
-        try:
-            usuario = Usuario.objects.get(id=id_usuario)
-            if usuario.tipo_usuario != 'BIBLIOTECARIO':
-                return JsonResponse({'erro': 'Somente bibliotecários podem cadastrar livros'}, status=403)
-        except Usuario.DoesNotExist:
-            return JsonResponse({'erro': 'Usuário não encontrado'}, status=404)
         
         try:
             livro = Livro.objects.create(
@@ -86,11 +86,11 @@ def cadastrar_livro(request):
                 ano = dados['ano'],
                 editora = dados['editora'],
                 numero_paginas = dados['numero_paginas'],
-                quantidade_total = dados['quantidade'],
-                quantidade_disponivel = dados['quantidade']
+                quantidade_total = 0,
+                quantidade_disponivel = 0
             )
             return JsonResponse({'mensagem': 'Livro cadastrado com sucesso!'}, status=201)
         except Exception as e:
             return JsonResponse({'erro': str(e)}, status=400)
     else:
-        return JsonResponse({'erro': 'Método não permitido'}, status=405)
+        return JsonResponse({'erro': 'Método não permitido!'}, status=405)
