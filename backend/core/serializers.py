@@ -12,7 +12,8 @@ class UsuarioSerializer(serializers.ModelSerializer):
         extra_kwargs = {'password': {'write_only': True}}
 
     def create(self, validated_data):
-        user = Usuario.objects.create_user(**validated_data)
+        ModelClass = self.Meta.model
+        user = ModelClass.objects.create_user(**validated_data)
         return user
 
 class AlunoSerializer(UsuarioSerializer):
