@@ -1,22 +1,23 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
-from .models import Usuario, Aluno, Livro, Exemplar, Emprestimo
+from .models import Usuario, Aluno, Bibliotecario, Livro, Exemplar, Emprestimo
 from rest_framework_simplejwt.tokens import RefreshToken
 
 class CoreAPITests(APITestCase):
     def setUp(self):
-        # Create a user for authentication
-        self.user = Usuario.objects.create_user(
+        # Create a librarian for authentication
+        self.bibliotecario = Bibliotecario.objects.create_user(
             username='testuser',
             password='testpassword',
             email='test@example.com',
             cpf='12345678901',
-            matricula='2023001'
+            matricula='2023001',
+            nome_completo='Bibliotecario de Teste'
         )
         
         # Generate token
-        refresh = RefreshToken.for_user(self.user)
+        refresh = RefreshToken.for_user(self.bibliotecario)
         self.token = str(refresh.access_token)
         self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
 
@@ -58,10 +59,14 @@ class CoreAPITests(APITestCase):
             ano=2023,
             editora='Editora Teste',
             numero_paginas=100,
-            quantidade_total=1,
-            quantidade_disponivel=1
+            quantidade_total=0,      
+            quantidade_disponivel=0
         )
         exemplar = Exemplar.objects.create(livro=livro, codigo_barras='CB001')
+
+        livro.quantidade_total = 1
+        livro.quantidade_disponivel = 1
+        livro.save()
 
         url = reverse('emprestimo-list')
         data = {
@@ -70,9 +75,12 @@ class CoreAPITests(APITestCase):
         }
         
         response = self.client.post(url, data, format='json')
+                
+        if response.status_code != 201:
+            print("\nERRO:", response.data)
+
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         
-        # Verify stock decrement
         livro.refresh_from_db()
         self.assertEqual(livro.quantidade_disponivel, 0)
 

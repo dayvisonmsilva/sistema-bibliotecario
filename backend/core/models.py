@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from datetime import date
+from datetime import date, timedelta
 
 class Usuario(AbstractUser):
     nome_completo = models.CharField(max_length=255)
@@ -62,7 +62,13 @@ class Reserva(models.Model):
     aluno = models.ForeignKey(Aluno, on_delete=models.CASCADE)
     livro = models.ForeignKey(Livro, on_delete=models.CASCADE) 
     data_reserva = models.DateField(auto_now_add=True)
-    
+    data_validade = models.DateField(editable=False, null=True, blank=True)
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.data_validade = date.today() + timedelta(days=3) # Regra de 3 dias
+        super().save(*args, **kwargs)
+        
     def __str__(self):
         return f"Reserva: {self.aluno} - {self.livro}"
 
@@ -78,7 +84,13 @@ class Emprestimo(models.Model):
     exemplar = models.ForeignKey(Exemplar, on_delete=models.CASCADE)
     data_emprestimo = models.DateField(auto_now_add=True)
     data_devolucao = models.DateField(null=True, blank=True)
+    data_limite = models.DateField(editable=False, null=True, blank=True)
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='ATIVO')
+
+    def save(self, *args, **kwargs):
+        if not self.id:
+            self.data_limite = date.today() + timedelta(days=7) # Regra de 7 dias
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return f"Empréstimo: {self.aluno} - {self.exemplar.codigo_barras}"
