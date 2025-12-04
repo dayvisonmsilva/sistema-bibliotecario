@@ -66,6 +66,18 @@ class ReservaSerializer(serializers.ModelSerializer):
         model = Reserva
         fields = '__all__'
 
+    def validate(self, attrs):
+        livro = attrs.get('livro')
+        if not self.instance and livro.quantidade_disponivel <= 0:
+            raise serializers.ValidationError("Não há exemplares disponíveis para reserva.")
+        return attrs
+
+    def create(self, validated_data):
+        livro = validated_data['livro']
+        livro.quantidade_disponivel -= 1
+        livro.save()
+        return super().create(validated_data)
+
 class EmprestimoSerializer(serializers.ModelSerializer):
     class Meta:
         model = Emprestimo
@@ -73,22 +85,39 @@ class EmprestimoSerializer(serializers.ModelSerializer):
         read_only_fields = ['data_limite', 'data_devolucao']
 
     def validate(self, attrs):
-        exemplar = attrs.get('exemplar')
-        # Verifica se o exemplar já está em um empréstimo ATIVO
-        if Emprestimo.objects.filter(exemplar=exemplar, status='ATIVO').exists():
-            raise serializers.ValidationError("Este exemplar já está emprestado.")
-        
-        if not self.instance and exemplar.livro.quantidade_disponivel <= 0:
-            raise serializers.ValidationError("Não há exemplares disponíveis.")
+        if not self.instance:
+            exemplar = attrs.get('exemplar')
+            aluno = attrs.get('aluno')
+            
+            # Verifica se o exemplar já está em um empréstimo ATIVO
+            if Emprestimo.objects.filter(exemplar=exemplar, status='ATIVO').exists():
+                raise serializers.ValidationError("Este exemplar já está emprestado.")
+            
+            # Verifica se existe reserva para este aluno e livro
+            has_reservation = Reserva.objects.filter(aluno=aluno, livro=exemplar.livro).exists()
+
+            # Se NÃO tem reserva, precisa ter estoque disponível
+            if not has_reservation:
+                if exemplar.livro.quantidade_disponivel <= 0:
+                    raise serializers.ValidationError("Não há exemplares disponíveis.")
         return attrs
 
     def create(self, validated_data):
         exemplar = validated_data['exemplar']
+        aluno = validated_data['aluno']
         livro = exemplar.livro
+        
+        # Verifica e consome reserva
+        reserva = Reserva.objects.filter(aluno=aluno, livro=livro).first()
+        
+        if reserva:
+            reserva.delete()
+            # Não decrementa estoque pois a reserva já o fez
+        else:
+            # Decrementa a quantidade disponível
+            livro.quantidade_disponivel -= 1
+            livro.save()
             
-        # Decrementa a quantidade disponível
-        livro.quantidade_disponivel -= 1
-        livro.save()
         return super().create(validated_data)
 
     def update(self, instance, validated_data):
