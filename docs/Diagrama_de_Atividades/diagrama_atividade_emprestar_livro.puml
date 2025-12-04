@@ -1,0 +1,51 @@
+@startuml "Emprestar Livro"
+title Diagrama de Atividade - Emprestar Livro
+
+|Usuário|
+start
+:Inicia processo de empréstimo;
+:Pesquisa pelo livro desejado;
+
+|Sistema|
+:Verifica disponibilidade do livro;
+
+if (Livro disponível?) then (sim)
+  |Usuário|
+  :Seleciona o livro para empréstimo;
+  
+  |Sistema|
+  :Solicita identificação do usuário;
+  
+  |Usuário|
+  :Apresenta identificação;
+  
+  |Sistema|
+  :Valida cadastro do usuário;
+  if (Usuário é válido?) then (sim)
+    :Registra o empréstimo no sistema;
+    :Confirma o empréstimo e informa a data de devolução;
+    
+    |Usuário|
+    :Recebe o livro e a confirmação;
+    stop
+  else (não)
+    :Exibe mensagem de erro (ex: cadastro inativo);
+    stop
+  endif
+else (não)
+  :Informa que o livro não está disponível;
+  
+  |Usuário|
+  if (Deseja entrar na fila de espera?) then (sim)
+    |Sistema|
+    :Adiciona usuário à fila de espera do livro;
+    
+    |Usuário|
+    :Recebe confirmação de inclusão na fila;
+    stop
+  else (não)
+    stop
+  endif
+endif
+
+@enduml

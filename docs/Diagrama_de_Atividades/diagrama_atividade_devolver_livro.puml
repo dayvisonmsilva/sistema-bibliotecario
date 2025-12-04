@@ -1,0 +1,31 @@
+@startuml "Devolver Livro"
+title Diagrama de Atividade - Devolver Livro
+
+|Usuário|
+start
+:Inicia processo de devolução;
+:Apresenta o livro a ser devolvido;
+
+|Sistema|
+:Identifica o livro e o registro de empréstimo;
+:Verifica a data de devolução;
+
+if (Devolução está atrasada?) then (sim)
+  :Calcula a multa por atraso;
+  :Notifica o usuário sobre a multa;
+  
+  |Usuário|
+  :Realiza o pagamento da multa;
+  
+  |Sistema|
+  :Confirma o recebimento do pagamento;
+endif
+
+:Registra a devolução do livro;
+:Atualiza o status do livro para "Disponível";
+
+|Usuário|
+:Recebe a confirmação da devolução;
+stop
+
+@enduml

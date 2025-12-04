@@ -1,0 +1,24 @@
+@startuml "Diagrama de Implantação do Sistema de Biblioteca"
+title Diagrama de Implantação do Sistema de Biblioteca
+
+node "Dispositivo do Usuário" as UserDevice {
+  component "Navegador Web / App Mobile" as ClientApp
+}
+
+node "Servidor Web" as WebServer {
+  artifact "Frontend da Aplicação" as Frontend
+}
+
+node "Servidor de Aplicação" as AppServer {
+  artifact "Backend da Aplicação" as Backend
+}
+
+node "Servidor de Banco de Dados" as DBServer {
+  database "Banco de Dados da Biblioteca" as Database
+}
+
+UserDevice --> WebServer : Requisição (HTTPS)
+WebServer --> AppServer : Requisição API (HTTP/S)
+AppServer --> DBServer : Consultas SQL (JDBC/ODBC)
+
+@enduml
