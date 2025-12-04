@@ -1,6 +1,23 @@
 from rest_framework import serializers
 from .models import Usuario, Aluno, Bibliotecario, Livro, Exemplar, Reserva, Emprestimo
 from datetime import date
+from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
+    def validate(self, attrs):
+        data = super().validate(attrs)
+        
+        # Adiciona dados do usuário à resposta
+        data['id'] = self.user.id
+        data['nome_completo'] = self.user.nome_completo
+        
+        # Define o tipo de usuário
+        if self.user.is_staff or hasattr(self.user, 'bibliotecario'):
+            data['tipo_usuario'] = 'bibliotecario'
+        else:
+            data['tipo_usuario'] = 'aluno'
+            
+        return data
 
 # ---------------------------------------------------------------------
 # USUÁRIOS

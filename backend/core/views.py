@@ -2,9 +2,14 @@ from rest_framework import viewsets, permissions, filters
 from .models import Usuario, Aluno, Bibliotecario, Livro, Exemplar, Reserva, Emprestimo
 from .serializers import (
     UsuarioSerializer, AlunoSerializer, BibliotecarioSerializer,
-    LivroSerializer, ExemplarSerializer, ReservaSerializer, EmprestimoSerializer
+    LivroSerializer, ExemplarSerializer, ReservaSerializer, EmprestimoSerializer,
+    CustomTokenObtainPairSerializer
 )
 from .permissions import IsBibliotecario
+from rest_framework_simplejwt.views import TokenObtainPairView
+
+class CustomTokenObtainPairView(TokenObtainPairView):
+    serializer_class = CustomTokenObtainPairSerializer
 
 class UsuarioViewSet(viewsets.ModelViewSet):
     queryset = Usuario.objects.all()
