@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .models import Usuario, Aluno, Bibliotecario, Livro, Exemplar, Reserva, Emprestimo
-from datetime import date
+from datetime import date, timedelta
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 
 class CustomTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -89,6 +89,10 @@ class EmprestimoSerializer(serializers.ModelSerializer):
             exemplar = attrs.get('exemplar')
             aluno = attrs.get('aluno')
             
+            # Verifica se o aluno está BLOQUEADO
+            if aluno.bloqueado_ate and aluno.bloqueado_ate >= date.today():
+                raise serializers.ValidationError(f"Aluno bloqueado por atraso até {aluno.bloqueado_ate.strftime('%d/%m/%Y')}.")
+
             # Verifica se o exemplar já está em um empréstimo ATIVO
             if Emprestimo.objects.filter(exemplar=exemplar, status='ATIVO').exists():
                 raise serializers.ValidationError("Este exemplar já está emprestado.")
@@ -128,7 +132,18 @@ class EmprestimoSerializer(serializers.ModelSerializer):
             livro.quantidade_disponivel += 1
             livro.save()
             
+            data_devolucao = validated_data.get('data_devolucao') or date.today()
             if not validated_data.get('data_devolucao'):
-                validated_data['data_devolucao'] = date.today()
+                validated_data['data_devolucao'] = data_devolucao
+
+            # Verificação de Atraso e Punição
+            if instance.data_limite and data_devolucao > instance.data_limite:
+                aluno = instance.aluno
+                nova_data_bloqueio = date.today() + timedelta(days=30)
+                
+                # Se já estiver bloqueado, só atualiza se a nova data for maior
+                if not aluno.bloqueado_ate or nova_data_bloqueio > aluno.bloqueado_ate:
+                    aluno.bloqueado_ate = nova_data_bloqueio
+                    aluno.save()
 
         return super().update(instance, validated_data)

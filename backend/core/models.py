@@ -28,6 +28,8 @@ class Usuario(AbstractUser):
 
 
 class Aluno(Usuario):
+    bloqueado_ate = models.DateField(null=True, blank=True)
+
     class Meta:
         verbose_name = 'Aluno'
 
