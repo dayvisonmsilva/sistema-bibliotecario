@@ -1,36 +1,50 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Frontend do Sistema de Biblioteca
 
-## Getting Started
+Este é o frontend da aplicação Sistema de Biblioteca, construído com [Next.js](https://nextjs.org).
 
-First, run the development server:
+## Como Rodar o Frontend
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+Para colocar o frontend em funcionamento, siga os passos abaixo:
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1.  **Pré-requisitos:**
+    *   Certifique-se de ter o [Node.js](https://nodejs.org/) (versão 18 ou superior) e o [npm](https://www.npmjs.com/) instalados em sua máquina.
+    *   O **backend** da aplicação (servidor Django) deve estar em execução. Consulte o `README.md` na pasta `backend/` para instruções sobre como configurá-lo e iniciá-lo. Por padrão, o frontend espera que o backend esteja acessível em `http://127.0.0.1:8000/api`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+2.  **Navegue até a pasta do frontend:**
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+    ```bash
+    cd frontend/
+    ```
 
-## Learn More
+3.  **Instale as dependências:**
 
-To learn more about Next.js, take a look at the following resources:
+    ```bash
+    npm install
+    ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+4.  **Inicie o servidor de desenvolvimento:**
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+    ```bash
+    npm run dev
+    ```
 
-## Deploy on Vercel
+5.  **Acesse a aplicação:**
+    Abra seu navegador e acesse [http://localhost:3000](http://localhost:3000).
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+A aplicação será recarregada automaticamente a cada alteração no código-fonte.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Scripts Disponíveis
+
+No diretório do projeto, você pode executar:
+
+*   `npm run dev`: Inicia a aplicação em modo de desenvolvimento.
+*   `npm run build`: Compila a aplicação para produção.
+*   `npm run start`: Inicia a aplicação em modo de produção (após rodar `npm run build`).
+*   `npm run lint`: Executa o linter para verificar problemas de código.
+
+## Saiba Mais
+
+Para aprender mais sobre Next.js, você pode consultar os seguintes recursos:
+
+*   [Next.js Documentation](https://nextjs.org/docs) - Aprenda sobre os recursos e API do Next.js.
+*   [Learn Next.js](https://nextjs.org/learn) - Um tutorial interativo de Next.js.
