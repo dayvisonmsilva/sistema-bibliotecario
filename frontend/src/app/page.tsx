@@ -1,57 +1,37 @@
 "use client";
 
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { Globe, File, AppWindow } from 'lucide-react'; // Ícones para ilustrar
 
-const HomePageAsLogin = () => {
-  const router = useRouter();
-
-  const handleLogin = (e: React.FormEvent) => {
-    e.preventDefault(); // Impede o recarregamento da página
-    // No futuro, aqui você adicionaria a lógica de autenticação real.
-    // Se a autenticação for bem-sucedida, redirecione.
-    router.push('/livros');
-  };
-
+const WelcomePage = () => {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="max-w-md w-full">
-        <h1 className="text-3xl font-bold mb-2 text-center">Sistema de Biblioteca</h1>
-        <p className="text-gray-600 mb-6 text-center">Por favor, faça login para continuar</p>
-        <form onSubmit={handleLogin} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
-              Usuário
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-              id="username"
-              type="text"
-              placeholder="Seu usuário"
-            />
-          </div>
-          <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">
-              Senha
-            </label>
-            <input
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline"
-              id="password"
-              type="password"
-              placeholder="******************"
-            />
-          </div>
-          <div className="flex items-center justify-center">
-            <button
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full"
-              type="submit"
-            >
-              Entrar
-            </button>
-          </div>
-        </form>
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 text-center p-4">
+      <div className="max-w-2xl">
+        <div className="flex justify-center items-center mb-4">
+            <AppWindow size={48} className="text-blue-500" />
+        </div>
+        <h1 className="text-4xl font-bold mb-2">Bem-vindo ao Sistema de Biblioteca</h1>
+        <p className="text-gray-600 mb-8">Gerencie seus empréstimos e explore nosso acervo.</p>
+        
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4">
+          <Link 
+            href="/livros" 
+            className="flex items-center justify-center gap-2 bg-white text-gray-800 font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-gray-100 transition-all duration-300 w-full md:w-auto"
+          >
+            <File size={20} />
+            Consultar Catálogo
+          </Link>
+          <Link 
+            href="/login" 
+            className="flex items-center justify-center gap-2 bg-blue-500 text-white font-semibold py-3 px-6 rounded-lg shadow-md hover:bg-blue-600 transition-all duration-300 w-full md:w-auto"
+          >
+            <Globe size={20} />
+            Fazer Login
+          </Link>
+        </div>
       </div>
     </div>
   );
 };
 
-export default HomePageAsLogin;
+export default WelcomePage;
