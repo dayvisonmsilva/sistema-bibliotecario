@@ -12,7 +12,7 @@ router.register(r'bibliotecarios', BibliotecarioViewSet)
 router.register(r'livros', LivroViewSet)
 router.register(r'exemplares', ExemplarViewSet)
 router.register(r'reservas', ReservaViewSet)
-router.register(r'emprestimos', EmprestimoViewSet)
+router.register(r'emprestimos', EmprestimoViewSet, basename='emprestimo')
 
 urlpatterns = [
     path('', include(router.urls)),

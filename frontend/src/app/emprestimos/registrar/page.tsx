@@ -8,7 +8,7 @@ import { type AxiosError, isAxiosError } from 'axios'; // Import AxiosError and 
 
 const RegistrarEmprestimoDevolucaoPage = () => {
     const [loanData, setLoanData] = useState({ aluno_cpf: '', aluno_senha: '', exemplar_codigo: '' });
-    const [returnData, setReturnData] = useState({ codigo_barras: '' });
+    const [returnData, setReturnData] = useState({ exemplar_codigo: '' });
 
     const [loadingLoan, setLoadingLoan] = useState(false);
     const [loadingReturn, setLoadingReturn] = useState(false);
@@ -52,7 +52,7 @@ const RegistrarEmprestimoDevolucaoPage = () => {
         try {
             await devolverEmprestimo(returnData);
             setMessageReturn({ text: 'Devolução registrada com sucesso!', type: 'success' });
-            setReturnData({ codigo_barras: '' }); // Limpa o formulário
+            setReturnData({ exemplar_codigo: '' }); // Limpa o formulário
         } catch (error: unknown) { // Catch as unknown
             let errorMsg = 'Não foi possível registrar a devolução.';
             if (isAxiosError(error) && error.response) {
@@ -113,8 +113,8 @@ const RegistrarEmprestimoDevolucaoPage = () => {
                     )}
                     <form onSubmit={handleReturnSubmit} className="space-y-4">
                         <div>
-                            <label className="label" htmlFor="codigo_barras">Código do Exemplar</label>
-                            <input required name="codigo_barras" id="codigo_barras" type="text" value={returnData.codigo_barras} onChange={handleReturnChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+                            <label className="label" htmlFor="exemplar_codigo">Código do Exemplar</label>
+                            <input required name="exemplar_codigo" id="exemplar_codigo" type="text" value={returnData.exemplar_codigo} onChange={handleReturnChange} className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
                         </div>
                         <button type="submit" disabled={loadingReturn} className="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded w-full">
                             {loadingReturn ? 'Registrando...' : 'Registrar Devolução'}
