@@ -1,0 +1,41 @@
+@startuml
+title Diagrama de Atividade - Reservar Livro
+
+|Usuário|
+start
+:Pesquisa por um livro;
+
+|Sistema|
+:Exibe detalhes e status do livro;
+
+if (Livro está indisponível?) then (sim)
+  |Usuário|
+  :Seleciona a opção para reservar o livro;
+  
+  |Sistema|
+  :Solicita identificação do usuário;
+  
+  |Usuário|
+  :Fornece sua identificação;
+  
+  |Sistema|
+  :Verifica a elegibilidade do usuário para reservas (ex: sem multas pendentes);
+  
+  if (Usuário é elegível?) then (sim)
+    :Registra a reserva no nome do usuário;
+    :Coloca o usuário na fila de espera do livro;
+    :Informa que o usuário será notificado quando o livro estiver disponível;
+    
+    |Usuário|
+    :Recebe a confirmação da reserva;
+    stop
+  else (não)
+    :Exibe mensagem de erro (ex: multas pendentes);
+    stop
+  endif
+else (não)
+  :Informa que o livro já está disponível para empréstimo;
+  stop
+endif
+
+@enduml

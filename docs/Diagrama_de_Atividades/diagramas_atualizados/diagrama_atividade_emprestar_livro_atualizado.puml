@@ -1,0 +1,59 @@
+@startuml "Registrar Empréstimo"
+title Diagrama de Atividade - Registrar Empréstimo
+
+|Bibliotecário|
+start
+:Selecionar "Registrar Empréstimo";
+
+|Sistema|
+:Exibir opções (Comum ou Com Reserva);
+
+|Bibliotecário|
+if (Tipo de Empréstimo?) then (Comum)
+  :Selecionar "Empréstimo Comum";
+else (Com Reserva)
+  :Selecionar "Empréstimo com Reserva";
+endif
+
+|Sistema|
+:Exibir formulário de empréstimo;
+
+|Bibliotecário|
+:Inserir código de barras do exemplar;
+
+|Aluno|
+:Inserir CPF e Senha;
+
+|Sistema|
+:Validar dados (Código, CPF e Senha);
+
+if (Dados Válidos?) then (Não)
+  :Exibir erro (Dados inválidos);
+  stop
+else (Sim)
+  if (É Empréstimo com Reserva?) then (Sim)
+    :Verificar existência da reserva;
+    if (Reserva encontrada para o aluno?) then (Não)
+      :Exibir erro (Reserva não encontrada);
+      stop
+    else (Sim)
+      :Validar exemplar e remover reserva;
+    endif
+  else (Não - Comum)
+    :Verificar disponibilidade do exemplar;
+    if (Exemplar disponível?) then (Não)
+      :Exibir erro (Sem exemplares);
+      stop
+    else (Sim)
+      :Alocar exemplar;
+    endif
+  endif
+endif
+
+:Registrar o empréstimo;
+:Atualizar estoque;
+:Exibir mensagem de confirmação;
+
+stop
+
+@enduml

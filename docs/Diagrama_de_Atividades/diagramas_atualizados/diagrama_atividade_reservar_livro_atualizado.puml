@@ -1,0 +1,31 @@
+@startuml "Reservar Livro"
+title Diagrama de Atividade - Reservar Livro
+
+|Aluno|
+start
+:Pesquisar livro no catálogo;
+
+|Sistema|
+:Verificar disponibilidade de exemplares;
+
+if (Há exemplar disponível?) then (Não)
+  :Informar indisponibilidade para reserva;
+  stop
+else (Sim)
+  |Aluno|
+  :Clicar em "Reservar";
+
+  |Sistema|
+  :Verificar situação do aluno\n(Pendências);
+
+  if (Aluno apto?) then (Não)
+    :Exibir mensagem de bloqueio;
+    stop
+  else (Sim)
+    :Registrar a reserva;
+    :Exibir confirmação e data limite para retirada;
+    stop
+  endif
+endif
+
+@enduml

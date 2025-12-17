@@ -1,0 +1,21 @@
+@startuml "Cadastrar Aluno"
+title Diagrama de Atividade - Cadastrar Aluno
+
+|Aluno|
+start
+:Acessar área de cadastro;
+:Informar dados pessoais;
+
+|Sistema|
+:Validar dados;
+
+if (Dados válidos e não cadastrados?) then (Sim)
+  :Registrar o aluno no banco de dados;
+  :Exibir mensagem de "Cadastro realizado com sucesso";
+  stop
+else (Não)
+  :Exibir mensagem de erro\n(Ex: Matrícula já existente ou dados inválidos);
+  stop
+endif
+
+@enduml

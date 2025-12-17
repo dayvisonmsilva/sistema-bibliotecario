@@ -1,0 +1,27 @@
+@startuml "Registrar Devolucao"
+title Diagrama de Atividade - Registrar Devolução
+
+|Bibliotecário|
+start
+:Selecionar opção de devolução;
+
+|Sistema|
+:Solicitar código de barras do exemplar;
+
+|Bibliotecário|
+:Informar código de barras;
+
+|Sistema|
+:Buscar registro de empréstimo ativo;
+
+if (Empréstimo encontrado?) then (Não)
+  :Exibir mensagem de erro\n(Exemplar não emprestado ou código inválido);
+  stop
+else (Sim)
+  :Alterar status do empréstimo para "Concluído";
+  :Atualizar contador de exemplares disponíveis;
+  :Exibir mensagem de confirmação;
+  stop
+endif
+
+@enduml

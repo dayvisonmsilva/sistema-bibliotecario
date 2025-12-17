@@ -1,0 +1,39 @@
+@startuml
+title Diagrama de Atividade - Cadastrar Novo Leitor
+
+|Novo Leitor|
+start
+:Solicita o cadastro no sistema da biblioteca;
+
+|Bibliotecário|
+:Pede os dados pessoais necessários;
+
+|Novo Leitor|
+:Fornece seus dados (nome, endereço, contato, etc.);
+
+|Bibliotecário|
+:Insere os dados do novo leitor no sistema;
+
+|Sistema|
+:Valida os dados e verifica se o leitor já possui cadastro;
+
+if (Dados são válidos e leitor não está cadastrado?) then (sim)
+  :Cria um novo registro de leitor;
+  :Gera o número de matrícula ou carteirinha;
+  :Confirma o cadastro;
+
+  |Bibliotecário|
+  :Entrega a carteirinha/matrícula ao novo leitor;
+  
+  |Novo Leitor|
+  :Recebe sua identificação da biblioteca;
+  stop
+else (não)
+  :Exibe mensagem de erro (ex: "CPF já cadastrado");
+
+  |Bibliotecário|
+  :Informa o problema ao solicitante;
+  stop
+endif
+
+@enduml
